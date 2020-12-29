@@ -1,121 +1,178 @@
-" Specify a directory for plugins
-call plug#begin('~/.vim/plugged')
-
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-Plug 'scrooloose/nerdtree'
-"Plug 'tsony-tsonev/nerdtree-git-plugin'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'ryanoasis/vim-devicons'
-Plug 'airblade/vim-gitgutter'
-Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
-Plug 'scrooloose/nerdcommenter'
-"Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-
-Plug 'christoomey/vim-tmux-navigator'
-
-Plug 'morhetz/gruvbox'
-
-Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
-
-" Initialize plugin system
-call plug#end()
-
-inoremap jk <ESC>
-nmap <C-n> :NERDTreeToggle<CR>
-vmap ++ <plug>NERDCommenterToggle
-nmap ++ <plug>NERDCommenterToggle
-
-" open NERDTree automatically
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * NERDTree
-"
-let g:NERDTreeGitStatusWithFlags = 1
-"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-"let g:NERDTreeGitStatusNodeColorization = 1
-"let g:NERDTreeColorMapCustom = {
-    "\ "Staged"    : "#0ee375",  
-    "\ "Modified"  : "#d9bf91",  
-    "\ "Renamed"   : "#51C9FC",  
-    "\ "Untracked" : "#FCE77C",  
-    "\ "Unmerged"  : "#FC51E6",  
-    "\ "Dirty"     : "#FFBD61",  
-    "\ "Clean"     : "#87939A",   
-    "\ "Ignored"   : "#808080"   
-    "\ }                         
-
-
-let g:NERDTreeIgnore = ['^node_modules$']
-
-" vim-prettier
-let g:prettier#quickfix_enabled = 0
-let g:prettier#quickfix_auto_focus = 0
-" prettier command for coc
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
-" run prettier on save
-let g:prettier#autoformat = 0
-autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
-
-
-" ctrlp
-let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-
-" j/k will move virtual lines (lines that wrap)
-noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
-noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
-
-set relativenumber
-
-set smarttab
-set cindent
-set tabstop=2
-set shiftwidth=2
-" always uses spaces instead of tab characters
-set expandtab
-
-colorscheme gruvbox
-
-" sync open file with NERDTree
-" " Check if NERDTree is open or active
-function! IsNERDTreeOpen()        
-  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-endfunction
-
-" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
-" file, and we're not in vimdiff
-function! SyncTree()
-  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-    NERDTreeFind
-    wincmd p
+function! MarkdownComposer(info)
+  if a:info.status == 'installed' || a:info.forced
+    if has('nvim')
+      silent! !cargo build --release
+    else
+      silent! !cargo build --release --no-default-features --features json-rpc
+    endif
   endif
 endfunction
 
-" Highlight currently open buffer in NERDTree
-autocmd BufEnter * call SyncTree()
+" Note: Make sure the function is defined before `vim-buffet` is loaded.
+function! g:BuffetSetCustomColors()
+  hi! BuffetCurrentBuffer cterm=NONE ctermbg=5 ctermfg=8 guibg=#11698e guifg=#16c79a
+endfunction
 
-" coc config
-let g:coc_global_extensions = [
-  \ 'coc-snippets',
-  \ 'coc-pairs',
-  \ 'coc-tsserver',
-  \ 'coc-eslint', 
-  \ 'coc-prettier', 
-  \ 'coc-json', 
-  \ ]
-" from readme
-" if hidden is not set, TextEdit might fail.
-set hidden " Some servers have issues with backup files, see #649 set nobackup set nowritebackup " Better display for messages set cmdheight=2 " You will have bad experience for diagnostic messages when it's default 4000.
+" Specify a directory for plugins
+call plug#begin('~/.vim/plugged')
+
+call BuffetSetCustomColors()
+" Vim-like navigation
+Plug 'christoomey/vim-tmux-navigator'
+
+" Icons
+Plug 'ryanoasis/vim-devicons'
+" ==================================
+" Formatting/colors
+" ==================================
+Plug 'lifepillar/vim-solarized8'
+" Plug 'altercation/vim-colors-solarized'
+Plug 'editorconfig/editorconfig-vim'
+
+Plug 'hail2u/vim-css3-syntax' " updates vim's built-in css to support CSS3
+Plug 'cakebaker/scss-syntax.vim'
+Plug 'pangloss/vim-javascript'
+
+" Open file in tab
+Plug 'bagrat/vim-buffet'
+" I don't want the snippets provided by this package as I like my own vim-react-snippets
+Plug 'HerringtonDarkholme/yats.vim', { 'do': 'rm -rf UltiSnips' }
+Plug 'maxmellon/vim-jsx-pretty'
+
+" ==================================
+" Linters, validators, and autocomplete
+" ==================================
+Plug 'alvan/vim-closetag'
+
+ Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+Plug 'SirVer/ultisnips'
+
+Plug 'mlaursen/vim-react-snippets'
+Plug 'mlaursen/rmd-vim-snippets'
+
+" Import cost
+Plug 'yardnsm/vim-import-cost', { 'do': 'npm install' }
+
+
+" git gutter
+Plug 'airblade/vim-gitgutter'
+" ==================================
+" File navigation
+" ==================================
+" Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
+" Plug 'junegunn/fzf.vim'
+
+Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
+" makes fzf work related to git root of buffer which is nice
+Plug 'airblade/vim-rooter'
+Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
+Plug 'Xuyuanp/nerdtree-git-plugin', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
+
+Plug 'tpope/vim-fugitive'
+
+" allows \bo to close all buffers except current focus
+Plug 'vim-scripts/BufOnly.vim'
+
+" ==================================
+" Notes
+" ==================================
+Plug 'vimwiki/vimwiki', {'on': ['VimwikiDiaryIndex', 'VimwikiMakeDiaryNote']}
+
+" ==================================
+" General helpers and status bars
+" ==================================
+" allow focus events for auto-reloading buffers as needed
+if has("nvim")
+  " this one appears to work with nvim while vitality works with vim. vitality is not preferred since it
+  " attempts to do cursor changes (yuck)
+  Plug 'tmux-plugins/vim-tmux-focus-events'
+else
+  Plug 'sjl/vitality.vim'
+endif
+
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat' " mostly used so that vim-surround can be repeated
+Plug 'tpope/vim-commentary' " easy comments with `gc` or `gcc`
+Plug 'matze/vim-move'
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'euclio/vim-markdown-composer', {'do': function('MarkdownComposer'), 'on': 'MarkdownPreview'}
+
+" Cursor shape
+Plug 'wincent/terminus'
+
+" Float terminal
+Plug 'voldikss/vim-floaterm' " Toggler terminal
+call plug#end()
+
+" Exit insert moder
+inoremap jk <ESC>
+
+" Enable mouse scroll
+set mouse=a
+" ================================================================
+" vim-airline
+" ================================================================
+" update airline to use solarized
+let g:airline_theme='solarized'
+let g:airline_solarized_bg='dark'
+
+" Always show the status bar and airline
+set laststatus=2
+set cmdheight=2
+
+" Vim - TAB
+let g:buffet_use_devicons=1
+noremap <Tab> :bn<CR>
+noremap <S-Tab> :bp<CR>
+noremap <Leader><Tab> :Bw<CR>
+noremap <Leader><S-Tab> :Bw!<CR>
+noremap <C-t> :tabnew split<CR>
+
+" Auto calculate the import cost
+augroup import_cost_auto_run
+  autocmd!
+  autocmd InsertLeave *.js,*.jsx,*.ts,*.tsx ImportCost
+  autocmd BufEnter *.js,*.jsx,*.ts,*.tsx ImportCost
+  autocmd CursorHold *.js,*.jsx,*.ts,*.tsx ImportCost
+augroup END
+
+" ================================================================
+" vim-javascript
+" ================================================================
+
+let g:javascript_plugin_jsdoc=1
+
+" ================================================================
+" coc.vim
+" ================================================================
+ 
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
 set updatetime=300
 
-" don't give |ins-completion-menu| messages.
+" Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
 
-" always show signcolumns
-set signcolumn=yes
+let g:coc_global_extensions=[
+      \ 'coc-css',
+      \ 'coc-pairs',
+      \ 'coc-stylelint',
+      \ 'coc-scssmodules',
+      \ 'coc-docker',
+      \ 'coc-eslint',
+      \ 'coc-json',
+      \ 'coc-html',
+      \ 'coc-prettier',
+      \ 'coc-tsserver',
+      \ 'coc-yaml',
+      \ 'coc-vimlsp',
+      \ ]
 
 " Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
@@ -128,25 +185,37 @@ function! s:check_back_space() abort
 endfunction
 
 " Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+" inoremap <silent><expr> <c-space> coc#refresh()
 
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" Or use `complete_info` if your vim support it, like:
-" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
 
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Remap keys for gotos
+" quickly jump between diagnostics
+nmap <silent> <C-k> <Plug>(coc-diagnostic-prev)
+nmap <silent> <C-j> <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-" Use K to show documentation in preview window
+" Symbol renaming.
+nmap <silent> fr <Plug>(coc-rename)
+
+" Formatting the file
+nmap <silent> ff <Plug>(coc-format)
+
+
+" Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
@@ -157,69 +226,361 @@ function! s:show_documentation()
   endif
 endfunction
 
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
+" Remap keys for applying codeAction to the current line.
+nmap <silent>fi <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <silent>fq <Plug>(coc-fix-current)
+nmap <silent>fe :<C-u>CocCommand eslint.executeAutofix<cr>
+" Organizing Imports
+nmap <silent>fI :<C-u>CocCommand tsserver.organizeImports<cr>
 
-" Remap for rename current word
-nmap <F2> <Plug>(coc-rename)
+" Mappings using CoCList:
+" Show all diagnostics.
+nnoremap <silent> <space>a :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent> <space>e :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent> <space>c :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent> <space>o :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent> <space>s :<C-u>CocList -I symbols<cr>
+" Resume latest coc list.
+nnoremap <silent> <space>r :<C-u>CocListResume<CR>
 
-" Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" for snippets
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
 
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-space> <Plug>(coc-snippets-expand)
 
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
+"  ================================================================
+" UltiSnips
+" ================================================================
+let g:UltiSnipsExpandTrigger='<c-space>'
 
-" Create mappings for function text object, requires document symbols feature of languageserver.
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
+" ================================================================
+" NERDTree
+" ================================================================
+" hide more stuff in NERDTree
+let g:NERDTreeShowHidden=1
 
-" Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <C-d> <Plug>(coc-range-select)
-xmap <silent> <C-d> <Plug>(coc-range-select)
+let g:NERDTreeIgnore = ['^node_modules$']
+" lazyily toggle nerdtree
+nmap <leader>B :NERDTreeToggle<cr>
+nmap <leader>F :NERDTreeFind<cr>
 
-" Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
+" ================================================================
+" FZF
+" ================================================================
+" Allow fzf search as \t
+" nmap <leader>t :FZF<cr>
 
-" Use `:Fold` to fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+" Update fzf.vim actions for bindings like command-t
 
-" use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+" ctrlp
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+" let g:fzf_action = {
+ ""     \ 'ctrl-s': 'split',
+ "     \ 'ctrl-t': 'tabedit',
+ ""     \ 'ctrl-v': 'vsplit',
+ ""     \ }
+" let g:fzf_layout = { 'down': '~40%' }
 
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" this allows the escape key to close the fzf window matching coc.nvim
+" if has("nvim")
+"  au TermOpen * tnoremap <buffer> <Esc> <c-\><c-n>
+"   au FileType fzf tunmap <buffer> <Esc>
+" endif
 
-" Using CocList
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+" ================================================================
+" vim-move
+" ================================================================
+" update vim-move to use control instead of alt since mac is stupid
+let g:move_key_modifier = 'C'
+let g:move_map_keys = 0
+let g:move_auto_indent = 0
+
+vmap <C-j> <Plug>MoveBlockDown
+vmap <C-k> <Plug>MoveBlockUp
+
+" ================================================================
+" vitality (for focus events)
+" ================================================================
+let g:vitality_fix_cursor=0
+
+" ================================================================
+" vim-jsx
+" ================================================================
+" allow jsx syntax in .js files
+let g:jsx_ext_required=0
+
+" ================================================================
+" vim-closetag
+" ================================================================
+" Update closetag to also work on js and html files, don't want ts since <> is used for type args
+let g:closetag_filenames='*.html,*.js,*.jsx,*.tsx'
+let g:closetag_regions = {
+    \ 'typescript': 'jsxRegion,tsxRegion',
+    \ 'typescriptreact': 'jsxRegion,tsxRegion',
+    \ 'typescript.tsx': 'jsxRegion,tsxRegion',
+    \ 'javascript.jsx': 'jsxRegion',
+    \ 'javascriptreact': 'jsxRegion',
+    \ }
+
+" ================================================================
+" vim-markdown-composer
+" ================================================================
+" only start markdown previewer after :ComposerStart
+let g:markdown_composer_autostart=0
+let g:markdown_composer_refresh_rate=-1
+let g:markdown_composer_external_renderer='pandoc -f gfm -t html'
+let g:markdown_composer_custom_css=['file:///Users/mlaursen/dotfiles/theme.min.css']
+
+function! MarkdownPreview()
+  if !exists('*ComposerStart')
+    " if vim-markdown-composer hasn't been added yet, add it and reload
+    " the file before calling ComposerStart. Not sure why reloading the
+    " file is required, but breaks if it isn't
+    packadd vim-markdown-composer
+    edit %
+  endif
+
+  ComposerStart
+endfunction
+
+command! MarkdownPreview call MarkdownPreview()
+autocmd FileType markdown nnoremap <buffer> <F12> :MarkdownPreview<cr>
+
+" ================================================================
+" VimWIKI
+" ================================================================
+let g:vimwiki_list = [{
+      \ 'path': '~/vimwiki/',
+      \ 'syntax': 'markdown',
+      \ 'ext': '.md'
+      \ }]
+
+" ================================================================
+" => General
+" ================================================================
+" Sets how many lines of history VIM has to remember
+set history=700
+
+" Enable filetype plugins
+filetype plugin on
+filetype indent on
+
+" Set to auto read when a file is changed from the outside
+set autoread
+
+let mapleader = "\\"
+let g:mapleader = "\\"
+
+nnoremap <leader>q :lclose<cr>:cclose<cr>:q<cr>
+nnoremap <leader>w :w<cr>
+nnoremap <leader>x :lclose<cr>:cclose<cr>:x<cr>:q<cr>
+
+" change directory to folder of current file
+nnoremap <leader>cd :cd %:p:h<cr>
+
+" turn backup off since it's handled by git
+set nobackup
+set nowb
+set noswapfile
+
+" Make it so that if files are changed externally (ex: changing git branches) update the vim buffers automatically
+autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if !bufexists("[Command Line]") | checktime | endif
+autocmd FileChangedShellPost *
+  \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+
+" Make it so any .env files are correctly styled. Normally only worked with .env
+autocmd BufNewFile,BufRead * if expand('%t') =~ '.env' | set filetype=sh | endif
+
+" For some reason it stopped setting tw correctly
+au FileType gitcommit setlocal tw=72
+
+au BufRead,BufNewFile .babelrc,.eslintrc set ft=json
+au BufRead,BufNewFile *nginx.conf.* set ft=nginx
+
+" update scss files for SassDoc comments
+au FileType scss set comments^=:///
+
+" Use ag instead of ack
+if executable('ag')
+  " Use ag for grepping
+  let g:ackprg='ag --vimgrep'
+
+  " grep visually selected text
+  vmap <leader>g y:Ag<space><C-R>"<cr>
+  nmap <leader>g :Ag<space>
+
+  " go to previous and next matches when using <leader>g
+  nmap <F9> :cp<cr>
+  nmap <F10> :cn<cr>
+endif
+
+
+" Toggle Terminal setting
+nnoremap   <silent>   <S-T>    :FloatermNew<CR>
+tnoremap   <silent>   <F7>    <C-\><C-n>:FloatermNew<CR>
+nnoremap   <silent>   <F8>    :FloatermPrev<CR>
+tnoremap   <silent>   <F8>    <C-\><C-n>:FloatermPrev<CR>
+nnoremap   <silent>   <F9>    :FloatermNext<CR>
+tnoremap   <silent>   <F9>    <C-\><C-n>:FloatermNext<CR>
+nnoremap   <silent>   <C-T>   :FloatermToggle<CR>
+tnoremap   <silent>   <C-T>   <C-\><C-n>:FloatermToggle<CR>
+
+" ================================================================
+" => VIM user interface
+" ================================================================
+
+" Line Numbers
+set nu
+
+" Turn on the WiLd menu
+set wildmenu
+
+set cmdheight=2
+
+" Always show the status bar and airline
+set laststatus=2
+
+" A buffer becomes hidden when it is abandoned (used for refactors)
+set hidden
+
+" Configure backspace so it acts as it should act
+set backspace=eol,start,indent
+set whichwrap+=<,>,h,l
+
+" Ignore case when searching
+set ignorecase
+
+" When searching try to be smart about cases
+set smartcase
+
+" Highlight search results
+set hlsearch
+
+" Makes search act like search in modern browsers
+set incsearch
+
+" Don't redraw while executing macros (good performance config)
+set lazyredraw
+
+" For regular expressions turn magic on
+set magic
+
+" update tab behavior
+set smartindent
+set autoindent
+set expandtab
+set smarttab
+set shiftwidth=2
+set tabstop=2
+
+" line breaking
+set lbr
+
+set ai "Auto indent
+set si "Smart indent
+set nowrap
+
+" Show matching brackets when text indicator is over them
+set showmatch
+" How many tenths of a second to blink when matching brackets
+set mat=2
+
+" No annoying sound on errors
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
+
+" ================================================================
+" => Colors and Fonts
+" ================================================================
+
+" Enable syntax highlighting
+syntax enable
+set termguicolors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+let g:solarized_old_cursor_style=1
+
+set background=dark
+
+silent! colorscheme desert
+
+" let it fail quietly if it hasn't been installed yet
+silent! colorscheme solarized8
+
+if has("nvim")
+  " Update cursor after the changes to nvim
+  set guicursor=n-v-c:block-Cursor/lCursor-blinkon0
+  set guicursor+=i-ci:block-Cursor/lCursor
+  set guicursor+=r-cr:hor20-Cursor/lCursor
+else
+  set guicursor=
+endif
+
+" ================================================================
+" => Files, backups and undo
+" ================================================================
+
+" Turn backup off, since most stuff is in SVN, git et.c anyway...
+set nobackup
+set nowb
+set noswapfile
+
+" ================================================================
+" => Cursor between Insert and Normal mode
+" ================================================================
+
+ let g:TerminusCursorShape=1
+ let g:TerminusNormalCursorShape=0
+ let g:TerminusInsertCursorShape=2
+
+" ================================================================
+" => Moving around, tabs, windows and buffers
+" ================================================================
+
+" Disable highlight when <leader><cr> is pressed
+map <silent> <leader><cr> :noh<cr>
+
+map <leader>b :Buffers<cr>
+map <leader>bd :Bclose<cr>
+
+" Close all buffers except current
+map <leader>bo :BufOnly<cr>
+
+" Specify the behavior when switching between buffers 
+try
+  set switchbuf=useopen,usetab,newtab
+  set stal=2
+catch
+endtry
+
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
+" Remember info about open buffers on close
+set viminfo^=%
+
+" ================================================================
+" => Spell checking
+" ================================================================
+" always enforce spell checking in text files
+autocmd BufRead,BufNewFile *.txt,*.md,COMMIT_EDITMSG setlocal spell
+
+" Pressing ,ss will toggle and untoggle spell checking
+map <leader>ss :setlocal spell!<cr>
+
+" linux doesn't do this by default, so enable it just to be safe
+hi SpellBad cterm=underline
