@@ -53,7 +53,8 @@ Plug 'mlaursen/rmd-vim-snippets'
 " Import cost
 Plug 'yardnsm/vim-import-cost', { 'do': 'npm install' }
 
-
+" Indent rainbow
+Plug 'nathanaelkane/vim-indent-guides'
 " git gutter
 Plug 'airblade/vim-gitgutter'
 " ==================================
@@ -109,8 +110,13 @@ call plug#end()
 " Exit insert moder
 inoremap jk <ESC>
 
+" Ctrl + S to save buffer
+nnoremap <C-S> :w <CR>
+inoremap <C-S> <ESC> :w <CR>
+
 " Enable mouse scroll
 set mouse=a
+
 " ================================================================
 " vim-airline
 " ================================================================
@@ -248,6 +254,11 @@ nnoremap <silent> <space>s :<C-u>CocList -I symbols<cr>
 " Resume latest coc list.
 nnoremap <silent> <space>r :<C-u>CocListResume<CR>
 
+" indent rainbow 
+let g:indent_guides_enable_on_vim_startup = 1
+"let g:indent_guides_auto_colors = 0
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#ffcda3  ctermbg=3
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#74c7b8 ctermbg=4
 " for snippets
 " Use <C-j> for jump to next placeholder, it's default of coc.nvim
 let g:coc_snippet_next = '<c-j>'
@@ -271,8 +282,8 @@ let g:NERDTreeShowHidden=1
 
 let g:NERDTreeIgnore = ['^node_modules$']
 " lazyily toggle nerdtree
-nmap <leader>B :NERDTreeToggle<cr>
-nmap <leader>F :NERDTreeFind<cr>
+nmap <leader>b :NERDTreeToggle<cr>
+nmap <leader>f :NERDTreeFind<cr>
 
 " ================================================================
 " FZF
