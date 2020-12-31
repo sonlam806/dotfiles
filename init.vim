@@ -33,6 +33,11 @@ Plug 'hail2u/vim-css3-syntax' " updates vim's built-in css to support CSS3
 Plug 'cakebaker/scss-syntax.vim'
 Plug 'pangloss/vim-javascript'
 
+" Sass compiler
+Plug 'AtsushiM/search-parent.vim'
+Plug 'AtsushiM/sass-compile.vim'
+
+
 " Open file in tab
 Plug 'bagrat/vim-buffet'
 " I don't want the snippets provided by this package as I like my own vim-react-snippets
@@ -116,6 +121,16 @@ inoremap <C-S> <ESC> :w <CR>
 
 " Enable mouse scroll
 set mouse=a
+
+" Sass compiler
+let g:sass_compile_auto = 1
+let g:sass_compile_cdloop = 5
+let g:sass_compile_cssdir = ['css', 'stylesheet']
+let g:sass_compile_file = ['scss', 'sass']
+let g:sass_compile_beforecmd = ''
+let g:sass_compile_aftercmd = ''
+autocmd FileType less,sass  setlocal sw=2 sts=2 ts=2 et
+au! BufWritePost * SassCompile
 
 " ================================================================
 " vim-airline
@@ -282,8 +297,8 @@ let g:NERDTreeShowHidden=1
 
 let g:NERDTreeIgnore = ['^node_modules$']
 " lazyily toggle nerdtree
-nmap <leader>b :NERDTreeToggle<cr>
-nmap <leader>f :NERDTreeFind<cr>
+nmap <C-B> :NERDTreeToggle<cr>
+nmap <C-F> :NERDTreeFind<cr>
 
 " ================================================================
 " FZF
