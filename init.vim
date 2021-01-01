@@ -20,6 +20,9 @@ call BuffetSetCustomColors()
 " Vim-like navigation
 Plug 'christoomey/vim-tmux-navigator'
 
+" Vim any-fold
+Plug 'pseewald/vim-anyfold'
+
 " Icons
 Plug 'ryanoasis/vim-devicons'
 " ==================================
@@ -131,6 +134,16 @@ let g:sass_compile_beforecmd = ''
 let g:sass_compile_aftercmd = ''
 autocmd FileType less,sass  setlocal sw=2 sts=2 ts=2 et
 au! BufWritePost * SassCompile
+
+" Vim folding
+ filetype plugin indent on " required
+ syntax on                 " required
+
+ autocmd Filetype * AnyFoldActivate               " activate for all filetypes
+ " or
+
+ set foldlevel=99 " Open all folds
+
 
 " ================================================================
 " vim-airline
@@ -452,12 +465,12 @@ endif
 
 
 " Toggle Terminal setting
-nnoremap   <silent>   <S-T>    :FloatermNew<CR>
-tnoremap   <silent>   <F7>    <C-\><C-n>:FloatermNew<CR>
-nnoremap   <silent>   <F8>    :FloatermPrev<CR>
-tnoremap   <silent>   <F8>    <C-\><C-n>:FloatermPrev<CR>
-nnoremap   <silent>   <F9>    :FloatermNext<CR>
-tnoremap   <silent>   <F9>    <C-\><C-n>:FloatermNext<CR>
+nnoremap   <silent>   <A-T>    :FloatermNew<CR>
+tnoremap   <silent>   <F2>    <C-\><C-n>:FloatermNew<CR>
+nnoremap   <silent>   <F3>    :FloatermPrev<CR>
+tnoremap   <silent>   <F4>    <C-\><C-n>:FloatermPrev<CR>
+nnoremap   <silent>   <F5>    :FloatermNext<CR>
+tnoremap   <silent>   <F6>    <C-\><C-n>:FloatermNext<CR>
 nnoremap   <silent>   <C-T>   :FloatermToggle<CR>
 tnoremap   <silent>   <C-T>   <C-\><C-n>:FloatermToggle<CR>
 
