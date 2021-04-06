@@ -8,27 +8,32 @@ function! MarkdownComposer(info)
   endif
 endfunction
 
-" Note: Make sure the function is defined before `vim-buffet` is loaded.
+" Note: Make sure the function is defined before `vim-buffet` is loaded. 323233
 function! g:BuffetSetCustomColors()
-  hi! BuffetCurrentBuffer cterm=NONE ctermbg=5 ctermfg=8 guibg=#11698e guifg=#16c79a
+  hi! BuffetCurrentBuffer cterm=NONE ctermbg=5 ctermfg=8 guibg=#689d6a guifg=#292a2a
 endfunction
 
 " Specify a directory for plugins
 call plug#begin('~/.vim/plugged')
 
 call BuffetSetCustomColors()
+
+" Vim window manage
+Plug 'paroxayte/vwm.vim'
+" Multiple cursor
+Plug 'terryma/vim-multiple-cursors'
 " Vim-like navigation
 Plug 'christoomey/vim-tmux-navigator'
-
-" Vim any-fold
-Plug 'pseewald/vim-anyfold'
-
+" Vim-emmet
+Plug 'mattn/emmet-vim'
+" Close all the buffer except current one
+Plug 'vim-scripts/BufOnly.vim'
 " Icons
 Plug 'ryanoasis/vim-devicons'
+Plug 'vwxyutarooo/nerdtree-devicons-syntax'
 " ==================================
 " Formatting/colors
 " ==================================
-Plug 'lifepillar/vim-solarized8'
 " Plug 'altercation/vim-colors-solarized'
 Plug 'editorconfig/editorconfig-vim'
 
@@ -37,12 +42,20 @@ Plug 'cakebaker/scss-syntax.vim'
 Plug 'pangloss/vim-javascript'
 
 " Sass compiler
-Plug 'AtsushiM/search-parent.vim'
-Plug 'AtsushiM/sass-compile.vim'
+" Plug 'AtsushiM/search-parent.vim'
+" Plug 'AtsushiM/sass-compile.vim'
+
+" Theme
+Plug 'lifepillar/vim-solarized8'
+Plug 'joshdick/onedark.vim'
+" Plug 'glepnir/zephyr-nvim'
+Plug 'haishanh/night-owl.vim'
 
 
 " Open file in tab
 Plug 'bagrat/vim-buffet'
+" Plug 'kyazdani42/nvim-web-devicons'
+" Plug 'romgrk/barbar.nvim'
 " I don't want the snippets provided by this package as I like my own vim-react-snippets
 Plug 'HerringtonDarkholme/yats.vim', { 'do': 'rm -rf UltiSnips' }
 Plug 'maxmellon/vim-jsx-pretty'
@@ -52,7 +65,7 @@ Plug 'maxmellon/vim-jsx-pretty'
 " ==================================
 Plug 'alvan/vim-closetag'
 
- Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
 Plug 'SirVer/ultisnips'
 
 Plug 'mlaursen/vim-react-snippets'
@@ -113,7 +126,21 @@ Plug 'wincent/terminus'
 
 " Float terminal
 Plug 'voldikss/vim-floaterm' " Toggler terminal
+" Live server
+Plug 'turbio/bracey.vim' " Type :Bracey to active Live server
+" Scrolbar
+Plug 'Xuyuanp/scrollbar.nvim'
+
 call plug#end()
+
+set guifont=Fira\ Code:h12
+
+" Ctrlp max files find
+let g:ctrlp_max_files=0
+
+" Layout keybinding
+nnoremap <C-a> :VwmToggle default <CR>
+
 
 " Exit insert moder
 inoremap jk <ESC>
@@ -122,28 +149,47 @@ inoremap jk <ESC>
 nnoremap <C-S> :w <CR>
 inoremap <C-S> <ESC> :w <CR>
 
+" Multiple cursors
+let g:multi_cursor_start_word_key      = '<C-d>'
+
 " Enable mouse scroll
 set mouse=a
 
 " Sass compiler
-let g:sass_compile_auto = 1
-let g:sass_compile_cdloop = 5
-let g:sass_compile_cssdir = ['css', 'stylesheet']
-let g:sass_compile_file = ['scss', 'sass']
-let g:sass_compile_beforecmd = ''
-let g:sass_compile_aftercmd = ''
-autocmd FileType less,sass  setlocal sw=2 sts=2 ts=2 et
-au! BufWritePost * SassCompile
+" let g:sass_compile_auto = 1
+" let g:sass_compile_cdloop = 5
+" let g:sass_compile_cssdir = ['css', 'stylesheet']
+" let g:sass_compile_file = ['scss', 'sass']
+" let g:sass_compile_beforecmd = ''
+" let g:sass_compile_aftercmd = ''
+" autocmd FileType less,sass  setlocal sw=2 sts=2 ts=2 et
+" au! BufWritePost * SassCompile
 
-" Vim folding
- filetype plugin indent on " required
- syntax on                 " required
+" Coc Error float config
+hi CocInfoFloat guifg=#ffffff guibg=#000000
 
- autocmd Filetype * AnyFoldActivate               " activate for all filetypes
- " or
 
- set foldlevel=99 " Open all folds
+" Theme config
+" If you have vim >=8.0 or Neovim >= 0.1.5
+" Enable true colors if available
+set termguicolors
+" Enable italics, Make sure this is immediately after colorscheme
+" https://stackoverflow.com/questions/3494435/vimrc-make-comments-italic
+highlight Comment cterm=italic gui=italic
+if (has("termguicolors"))
+ set termguicolors
+endif
 
+" For Neovim 0.1.3 and 0.1.4
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+""""" enable the theme
+
+syntax enable
+colorscheme night-owl
+
+" To enable the lightline theme
+let g:lightline = { 'colorscheme': 'nightowl' }
 
 " ================================================================
 " vim-airline
@@ -162,7 +208,15 @@ noremap <Tab> :bn<CR>
 noremap <S-Tab> :bp<CR>
 noremap <Leader><Tab> :Bw<CR>
 noremap <Leader><S-Tab> :Bw!<CR>
-noremap <C-t> :tabnew split<CR>
+" noremap <C-t> :tabnew split<CR>
+
+augroup ScrollbarInit
+  autocmd!
+  autocmd CursorMoved,VimResized,QuitPre * silent! lua require('scrollbar').show()
+  autocmd WinEnter,FocusGained           * silent! lua require('scrollbar').show()
+  autocmd WinLeave,FocusLost             * silent! lua require('scrollbar').clear()
+augroup end
+
 
 " Auto calculate the import cost
 augroup import_cost_auto_run
@@ -184,7 +238,7 @@ let g:javascript_plugin_jsdoc=1
  
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=300
+set updatetime=200
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
@@ -295,13 +349,14 @@ let g:coc_snippet_next = '<c-j>'
 let g:coc_snippet_prev = '<c-k>'
 
 " Use <C-j> for both expand and jump (make expand higher priority.)
-imap <C-space> <Plug>(coc-snippets-expand)
+imap <C-o> <Plug>(coc-snippets-expand)
 
 "  ================================================================
 " UltiSnips
 " ================================================================
-let g:UltiSnipsExpandTrigger='<c-space>'
-
+let g:UltiSnipsExpandTrigger='<c-o>'
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
 " ================================================================
 " NERDTree
 " ================================================================
@@ -463,7 +518,10 @@ if executable('ag')
   nmap <F10> :cn<cr>
 endif
 
-
+" Emmet
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
+let g:user_emmet_leader_key=','
 " Toggle Terminal setting
 nnoremap   <silent>   <A-T>    :FloatermNew<CR>
 tnoremap   <silent>   <F2>    <C-\><C-n>:FloatermNew<CR>
@@ -553,10 +611,14 @@ let g:solarized_old_cursor_style=1
 
 set background=dark
 
-silent! colorscheme desert
+ silent! colorscheme onedark
+" lua require('zephyr')
+" colorscheme zephyr
+
+" lua require('zephyr').get_zephyr_color()
 
 " let it fail quietly if it hasn't been installed yet
-silent! colorscheme solarized8
+ silent! colorscheme onedark
 
 if has("nvim")
   " Update cursor after the changes to nvim
@@ -580,9 +642,10 @@ set noswapfile
 " => Cursor between Insert and Normal mode
 " ================================================================
 
- let g:TerminusCursorShape=1
- let g:TerminusNormalCursorShape=0
- let g:TerminusInsertCursorShape=2
+ " let g:TerminusCursorShape=1
+ " let g:TerminusNormalCursorShape=0
+ " let g:TerminusInsertCursorShape=2
+autocmd InsertEnter,InsertLeave * set cul!
 
 " ================================================================
 " => Moving around, tabs, windows and buffers
@@ -594,6 +657,10 @@ map <silent> <leader><cr> :noh<cr>
 map <leader>b :Buffers<cr>
 map <leader>bd :Bclose<cr>
 
+" Resize
+nnoremap <leader>+ :vertical resize +5<CR>
+nnoremap <leader>- :vertical resize -5<CR>
+
 " Close all buffers except current
 map <leader>bo :BufOnly<cr>
 
@@ -603,6 +670,9 @@ try
   set stal=2
 catch
 endtry
+
+" Prettier
+command! -nargs=1 Prettier :CocCommand prettier.formatFile
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *

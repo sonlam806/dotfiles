@@ -1,0 +1,1 @@
+/Users/shindo/.dotfiles/neovim/init.lua
