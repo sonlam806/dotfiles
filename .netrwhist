@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =9
+let g:netrw_dirhistcnt =0
+let g:netrw_dirhist_0='/Users/shindo/Desktop/dev/angular-learning/learningAngular/src/app/recipes/recipe-start'
 let g:netrw_dirhist_9='/Users/shindo/Desktop/dev/huongda/DMS-Customer/src/_helpers/auth'
 let g:netrw_dirhist_8='/Users/shindo/Desktop/dev/huongda/DMS-Customer/src'
 let g:netrw_dirhist_7='/Users/shindo/Desktop/dev/angular-learning/learningAngular/src/app'

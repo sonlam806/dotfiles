@@ -100,6 +100,9 @@ Plug 'vim-scripts/BufOnly.vim'
 " ==================================
 Plug 'vimwiki/vimwiki', {'on': ['VimwikiDiaryIndex', 'VimwikiMakeDiaryNote']}
 
+" Snippets
+Plug 'grvcoelho/vim-javascript-snippets'
+
 " ==================================
 " General helpers and status bars
 " ==================================
@@ -343,6 +346,7 @@ let g:indent_guides_enable_on_vim_startup = 1
 "autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#74c7b8 ctermbg=4
 " for snippets
 " Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:UltiSnipsSnippetsDir = "~/.vim/plugged/vim-javascript-snippets/snippets"
 let g:coc_snippet_next = '<c-j>'
 
 " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
