@@ -1,5 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =0
+let g:netrw_dirhistcnt =2
+let g:netrw_dirhist_2='/Users/shindo/Desktop/dev/personal/nextjs-2021/src/components/events'
+let g:netrw_dirhist_1='/Users/shindo/Desktop/dev/react-concept/react-redux-ts/src/hooks/utils'
 let g:netrw_dirhist_0='/Users/shindo/Desktop/dev/angular-learning/learningAngular/src/app/recipes/recipe-start'
 let g:netrw_dirhist_9='/Users/shindo/Desktop/dev/huongda/DMS-Customer/src/_helpers/auth'
 let g:netrw_dirhist_8='/Users/shindo/Desktop/dev/huongda/DMS-Customer/src'
@@ -8,5 +10,3 @@ let g:netrw_dirhist_6='/Users/shindo/.tmux'
 let g:netrw_dirhist_5='/Users/shindo/Desktop/dev/angular-learning/learningAngular/src/app/directives'
 let g:netrw_dirhist_4='/Users/shindo/Desktop/dev/angular-learning/learningAngular/src/app'
 let g:netrw_dirhist_3='/Users/shindo/Desktop/dev/angular-learning/learningAngular'
-let g:netrw_dirhist_2='/Users/shindo/Desktop/dev/angular-learning/learningAngular/src/app'
-let g:netrw_dirhist_1='/Users/shindo/Desktop/dev/angular-learning/learningAngular/src/app/error-page'

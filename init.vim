@@ -342,8 +342,8 @@ nnoremap <silent> <space>r :<C-u>CocListResume<CR>
 " indent rainbow 
 let g:indent_guides_enable_on_vim_startup = 1
 "let g:indent_guides_auto_colors = 0
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#ffcda3  ctermbg=3
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#74c7b8 ctermbg=4
+" autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#ffcda3  ctermbg=3
+" autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#74c7b8 ctermbg=4
 " for snippets
 " Use <C-j> for jump to next placeholder, it's default of coc.nvim
 let g:UltiSnipsSnippetsDir = "~/.vim/plugged/vim-javascript-snippets/snippets"
