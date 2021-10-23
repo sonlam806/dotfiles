@@ -1,0 +1,15 @@
+{
+  "coc.preferences": {
+    "formatOnSaveFiletypes": [
+    "css",
+    "scss",
+    "html",
+    "markdown",
+    "javascript",
+    "typescript",
+    "javasciptreact",
+    "typescriptreact"
+    ],
+    "triggerAfterInsertEnter": false
+  }
+}
