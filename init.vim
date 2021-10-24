@@ -7,8 +7,12 @@ Plug 'kyazdani42/nvim-tree.lua'
 " Plug 'ful1e5/onedark.nvim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'ful1e5/onedark.nvim'
-Plug 'morhetz/gruvbox'
 Plug 'sonph/onehalf', { 'rtp': 'vim' }
+Plug 'tomasiser/vim-code-dark'
+Plug 'mhartington/oceanic-next'
+Plug 'drewtempelmeyer/palenight.vim'
+
+
 
 " Status line
 Plug 'hoob3rt/lualine.nvim'
@@ -36,11 +40,18 @@ Plug 'andrewradev/tagalong.vim'
 
 " React
 Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
-Plug 'peitalin/vim-jsx-typescript'
+" Plug 'leafgarland/typescript-vim'
+" Plug 'peitalin/vim-jsx-typescript'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'jparise/vim-graphql'
 Plug 'alvan/vim-closetag'
+" Plug 'HerringtonDarkholme/yats.vim'
+" or Plug 'leafgarland/typescript-vim'
+" Plug 'maxmellon/vim-jsx-pretty'
+Plug 'sheerun/vim-polyglot'
+Plug 'SirVer/ultisnips'
+Plug 'mlaursen/vim-react-snippets'
+
 
 " Auto complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -53,10 +64,13 @@ call plug#end()
 " -- UI
 "colorscheme tokyonight
 syntax on
-set t_Co=256
 set cursorline
-colorscheme onehalfdark
+colorscheme palenight 
+set background=dark
 let g:airline_theme='onehalfdark'
+syntax enable
+set nocompatible
+
 "colorscheme gruvbox
 " lua require('onedark').setup()
 
@@ -68,6 +82,7 @@ nnoremap <C-l> <C-W><C-L>
 nnoremap <C-h> <C-W><C-H>
 " exit insert mode
 inoremap jk <ESC>
+nnoremap <ESC> :noh<CR>
 " map leader key to Spacebar
 let mapleader=" "
 " Ctr + S to save the file. Magic!!!
