@@ -4,15 +4,15 @@ call plug#begin('~/.vim/plugged')
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
 " Theme
-" Plug 'ful1e5/onedark.nvim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-Plug 'ful1e5/onedark.nvim'
-Plug 'sonph/onehalf', { 'rtp': 'vim' }
-Plug 'tomasiser/vim-code-dark'
-Plug 'mhartington/oceanic-next'
 Plug 'drewtempelmeyer/palenight.vim'
 
-
+" Spell checker
+Plug 'lewis6991/spellsitter.nvim'
+" hightlight todo
+Plug 'nvim-lua/plenary.nvim'
+Plug 'folke/todo-comments.nvim'
+Plug 'preservim/nerdcommenter'
 
 " Status line
 Plug 'hoob3rt/lualine.nvim'
@@ -23,7 +23,7 @@ Plug 'windwp/nvim-autopairs'
 " Indent line
 Plug 'lukas-reineke/indent-blankline.nvim'
 " Comment
-Plug 'preservim/nerdcommenter'
+Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 " Find files, buffers, grep
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -31,6 +31,7 @@ Plug 'junegunn/fzf.vim'
 " Git
 Plug 'airblade/vim-gitgutter'
 Plug 'lewis6991/gitsigns.nvim'
+Plug 'APZelos/blamer.nvim'
 
 " Terminal
 Plug 'Lenovsky/nuake'
@@ -38,16 +39,14 @@ Plug 'voldikss/vim-floaterm'
 "Auto rename tag
 Plug 'andrewradev/tagalong.vim'
 
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'b3nj5m1n/kommentary'
+
 " React
 Plug 'pangloss/vim-javascript'
-" Plug 'leafgarland/typescript-vim'
-" Plug 'peitalin/vim-jsx-typescript'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'jparise/vim-graphql'
 Plug 'alvan/vim-closetag'
-" Plug 'HerringtonDarkholme/yats.vim'
-" or Plug 'leafgarland/typescript-vim'
-" Plug 'maxmellon/vim-jsx-pretty'
 Plug 'sheerun/vim-polyglot'
 Plug 'SirVer/ultisnips'
 Plug 'mlaursen/vim-react-snippets'
@@ -59,15 +58,15 @@ let g:coc_global_extensions = [
   \ 'coc-tsserver'
   \ ]
 
+
 call plug#end()
 
 " -- UI
-"colorscheme tokyonight
 syntax on
 set cursorline
 colorscheme palenight 
 set background=dark
-let g:airline_theme='onehalfdark'
+let g:airline_theme='palenight'
 syntax enable
 set nocompatible
 
@@ -90,18 +89,23 @@ noremap <silent> <C-S>     :w<CR>
 vnoremap <silent> <C-S>    <C-C>:w<CR>
 inoremap <silent> <C-S>    <C-O>:w<CR>
 
+" NerdCommenter
+filetype plugin on
+
 set mouse=a
 set number
 set termguicolors 
 " On pressing tab, insert 2 spaces
 set expandtab
-" show existing tab with 2 spaces width
-set tabstop=2
 set softtabstop=2
 " when indenting with '>', use 2 spaces width
 set shiftwidth=2
 " Copy/Paste from clipboard
 set clipboard=unnamedplus
+
+" Restart Neovim without quiting
+inoremap <C-r> :source $MYVIMRC<CR>
+nnoremap <C-r> :source $MYVIMRC<CR>
 
 " Nvim tree
 let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ] "empty by default
@@ -129,6 +133,8 @@ lua require('plugin/gitsigns')
 lua require('plugin/bufferline')
 lua require('plugin/tokyonight')
 lua require('nvim-autopairs').setup{}
+lua require('spellsitter').setup{}
+lua require('todo-comments').setup{}
 
 " Gitgutter
 let g:gitgutter_enabled = 1 
@@ -148,8 +154,6 @@ au VimEnter * :Gitsigns toggle_current_line_blame<CR>
 
 " Prettier
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
-vmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
 
 autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
 autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
@@ -181,9 +185,12 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 nnoremap <silent> <space>d :<C-u>CocList diagnostics<cr>
 nmap <leader>rn <Plug>(coc-rename)
 
+
 inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-k>"
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-j>"
 
 " ############### PRETTIER #################
 let g:prettier#config#jsx_single_quote = 'true'
@@ -191,7 +198,12 @@ let g:prettier#config#print_width = '80'
 let g:prettier#config#bracket_spacing = 'true'
 
 " ############### FZF #################
-nnoremap <leader>ff <cmd>Files<CR>
+nnoremap <leader>ff :Files<CR>
+nnoremap <C-p> :Files<CR>
+inoremap <C-p> :Files<CR>
 
 " Auto closing tag
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.jsx,*.tsx'
+
+" ############### GIT #################
+let g:blamer_enabled = 1
