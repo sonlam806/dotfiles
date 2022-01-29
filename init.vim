@@ -125,7 +125,8 @@ nnoremap <leader>fh <cmd>:Telescope help_tags<cr>
 "
 " LUA zone
 " lua require('onedark').setup()
-lua require('plugin/nvim-tree')
+" lua require('plugin/nvim-tree')
+lua require('nvim-tree').setup{}
 lua require('plenary')
 " lua require('plugin/telescope')
 lua require('plugin/lualine/init')

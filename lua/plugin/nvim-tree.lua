@@ -13,7 +13,7 @@ function M.config()
       folder_arrows = 1,
       tree_width = 30,
     },
-    ignore = { ".git", "node_modules", ".cache", ".build" },
+    -- ignore = { ".git", "node_modules", ".cache", ".build" },
     auto_open = 0,
     auto_close = 1,
     quit_on_open = 0,
