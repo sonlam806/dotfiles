@@ -11,7 +11,8 @@ Plug 'drewtempelmeyer/palenight.vim'
 Plug 'lewis6991/spellsitter.nvim'
 " hightlight todo
 Plug 'nvim-lua/plenary.nvim'
-Plug 'folke/todo-comments.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+" Plug 'folke/todo-comments.nvim'
 Plug 'preservim/nerdcommenter'
 
 " Status line
@@ -58,6 +59,8 @@ let g:coc_global_extensions = [
   \ 'coc-tsserver'
   \ ]
 
+" Utils 
+Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
 
 call plug#end()
 
@@ -128,14 +131,15 @@ nnoremap <leader>fh <cmd>:Telescope help_tags<cr>
 " lua require('plugin/nvim-tree')
 lua require('nvim-tree').setup{}
 lua require('plenary')
-" lua require('plugin/telescope')
+" lua require('telescope').setup{}
+lua require('plugin/telescope')
 lua require('plugin/lualine/init')
 lua require('plugin/gitsigns')
 lua require('plugin/bufferline')
 lua require('plugin/tokyonight')
 lua require('nvim-autopairs').setup{}
 lua require('spellsitter').setup{}
-lua require('todo-comments').setup{}
+" lua require('todo-comments').setup{}
 
 " Gitgutter
 let g:gitgutter_enabled = 1 
@@ -199,7 +203,12 @@ let g:prettier#config#print_width = '80'
 let g:prettier#config#bracket_spacing = 'true'
 
 " ############### FZF #################
-nnoremap <leader>ff :Files<CR>
+" nnoremap <leader>ff :Files<CR>
+" nnoremap <C-p> :Files<CR>
+" inoremap <C-p> :Files<CR>
+nnoremap <leader>ff :Telescope find_files<CR>
+nnoremap <leader>fg :Telescope live_grep<CR>
+nnoremap <leader>fb :Telescope buffers<CR>
 nnoremap <C-p> :Files<CR>
 inoremap <C-p> :Files<CR>
 
