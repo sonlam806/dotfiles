@@ -73,6 +73,10 @@ let g:airline_theme='palenight'
 syntax enable
 set nocompatible
 
+" Python Provider
+let g:python_host_prog = '/usr/bin/python'
+let g:python3_host_prog = '/usr/bin/python3'
+
 "colorscheme gruvbox
 " lua require('onedark').setup()
 
