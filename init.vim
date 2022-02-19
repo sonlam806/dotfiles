@@ -33,6 +33,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'APZelos/blamer.nvim'
+Plug 'tpope/vim-fugitive'
 
 " Terminal
 Plug 'Lenovsky/nuake'
