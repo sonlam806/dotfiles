@@ -33,4 +33,10 @@ vim.cmd [[
   command! AstroUpdate lua require('core.utils').update()
 ]]
 
+vim.cmd [[
+  autocmd BufWritePost *.php silent! call PhpCsFixerFixFile()
+]]
+
+
+
 return M

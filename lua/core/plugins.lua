@@ -255,6 +255,12 @@ local astro_plugins = {
       end
     end,
   },
+  {
+    "sbdchd/neoformat"
+  },
+  {
+    "stephpy/vim-php-cs-fixer" 
+  },
 
   -- Fuzzy finder
   {
@@ -284,6 +290,9 @@ local astro_plugins = {
       require("configs.gitsigns").config()
     end,
     disable = not config.enabled.gitsigns,
+  },
+  {
+    "APZelos/blamer.nvim"
   },
 
   -- Start screen

@@ -5,6 +5,9 @@ local config = require("core.utils").user_settings()
 local opts = { noremap = true, silent = true }
 local map = vim.api.nvim_set_keymap
 
+-- Global variables
+vim.g.php_cs_fixer_php_path = "/usr/local/opt/php@7.4/bin/php"
+
 -- Remap space as leader key
 map("", "<Space>", "<Nop>", opts)
 vim.g.mapleader = " "
@@ -27,16 +30,16 @@ map("n", "<C-Right>", "<cmd>lua require'smart-splits'.resize_right(2)<cr>", opts
 if config.enabled.bufferline then
   map("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", opts)
   map("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", opts)
-  map("n", "}", "<cmd>BufferLineMoveNext<cr>", opts)
-  map("n", "{", "<cmd>BufferLineMovePrev<cr>", opts)
+  map("n", "<Tab>", "<cmd>BufferLineCycleNext<cr>", opts)
+  map("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<cr>", opts)
 else
   map("n", "<S-l>", "<cmd>bnext<CR>", opts)
   map("n", "<S-h>", "<cmd>bprevious<CR>", opts)
 end
 
 -- Move text up and down
-map("n", "<A-j>", "<Esc><cmd>m .+1<CR>==gi", opts)
-map("n", "<A-k>", "<Esc><cmd>m .-2<CR>==gi", opts)
+-- map("n", "<A-j>", "<Esc><cmd>m .+1<CR>==gi", opts)
+-- map("n", "<A-k>", "<Esc><cmd>m .-2<CR>==gi", opts)
 
 -- Standard Operations
 map("n", "<leader>w", "<cmd>w<CR>", opts)
@@ -155,20 +158,20 @@ end
 
 -- Visual --
 -- Stay in indent mode
-map("v", "<", "<gv", opts)
-map("v", ">", ">gv", opts)
+-- map("v", "<", "<gv", opts)
+-- map("v", ">", ">gv", opts)
 
 -- Move text up and down
-map("v", "<A-j>", "<cmd>m .+1<CR>==", opts)
-map("v", "<A-k>", "<cmd>m .-2<CR>==", opts)
-map("v", "p", '"_dP', opts)
+-- map("v", "<A-j>", "<cmd>m .+1<CR>==", opts)
+-- map("v", "<A-k>", "<cmd>m .-2<CR>==", opts)
+-- map("v", "p", '"_dP', opts)
 
 -- Visual Block --
 -- Move text up and down
-map("x", "J", "<cmd>move '>+1<CR>gv-gv", opts)
-map("x", "K", "<cmd>move '<-2<CR>gv-gv", opts)
-map("x", "<A-j>", "<cmd>move '>+1<CR>gv-gv", opts)
-map("x", "<A-k>", "<cmd>move '<-2<CR>gv-gv", opts)
+-- map("x", "J", "<cmd>move '>+1<CR>gv-gv", opts)
+-- map("x", "K", "<cmd>move '<-2<CR>gv-gv", opts)
+-- map("x", "<A-j>", "<cmd>move '>+1<CR>gv-gv", opts)
+-- map("x", "<A-k>", "<cmd>move '<-2<CR>gv-gv", opts)
 
 -- disable Ex mode:
 map("n", "Q", "<Nop>", opts)
